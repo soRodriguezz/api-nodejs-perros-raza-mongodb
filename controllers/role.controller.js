@@ -13,7 +13,9 @@ exports.createRole = async (req, res) => {
       return res.status(400).json({ message: "Invalid data" });
     } else {
       if (locateName || locateRole) {
-        return res.status(400).json({ message: "Role or NameRole is already taken" });
+        return res
+          .status(400)
+          .json({ message: "Role or NameRole is already taken" });
       } else {
         const newRole = await new Role({ name, role, slug }).save();
         return res.status(200).json(newRole);
@@ -46,13 +48,18 @@ exports.searchRole = async (req, res) => {
 
 exports.removeSoftRole = async (req, res) => {
   try {
-    const { idRole } = req.params;
-    const role = await Role.findByIdAndUpdate(idRole, { deleted: true });
+    const { slug } = req.params;
 
-    if (!role) {
+    const deletedRole = await Role.findOneAndUpdate(
+      { slug },
+      { status: "active" },
+      { new: true }
+    );
+
+    if (!deletedRole) {
       return res.status(404).json({ message: "Role not found" });
     } else {
-      return res.status(200).json(role);
+      return res.status(200).json(deletedRole);
     }
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
