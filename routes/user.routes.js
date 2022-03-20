@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { createUser } = require("../controllers/user.controller");
+const authJwt = require("../middlewares/authJwt");
 
-router.post("/user/", createUser);
+const { createUser, listUsers } = require("../controllers/user.controller");
+
+router.post("/user/", [authJwt.verifyToken, authJwt.isAdmin], createUser);
+router.get("/users/",  [authJwt.verifyToken, authJwt.isModerator], listUsers);
 
 module.exports = router;

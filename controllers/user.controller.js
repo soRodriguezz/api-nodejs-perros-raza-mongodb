@@ -40,3 +40,12 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ error });
   }
 };
+
+exports.listUsers = async (req, res) => {
+  try {
+    const users = await User.find({ status: "active" });
+    return res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
