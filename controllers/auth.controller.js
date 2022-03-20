@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Role = require("../models/Role");
 const jwt = require("jsonwebtoken");
 
 exports.signin = async (req, res) => {
@@ -16,3 +17,30 @@ exports.signin = async (req, res) => {
 
     res.json({token});
 };
+
+exports.signup = async (req, res) => {
+    const { username, email, password, roles } = req.body;
+  
+    const newUser = new User({
+      username,
+      email,
+      password: await User.encryptPassword(password),
+    });
+  
+    if (roles) {
+      const foundRole = await Role.find({ name: { $in: roles } });
+      newUser.roles = foundRole.map((role) => role._id);
+    } else {
+      const role = await Role.find({ name: "user" });
+      newUser.roles = [role._id];
+    }
+    
+    const savedUser = await newUser.save();
+  
+    const token = jwt.sign({ id: savedUser._id }, process.env.SECRET, {
+      expiresIn: 900,
+    });
+  
+    res.status(200).json({ token });
+};
+
