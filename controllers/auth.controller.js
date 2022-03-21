@@ -19,7 +19,7 @@ exports.signin = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-    const { username, email, password, roles } = req.body;
+    const { username, email, password } = req.body;
   
     const newUser = new User({
       username,
@@ -27,14 +27,9 @@ exports.signup = async (req, res) => {
       password: await User.encryptPassword(password),
     });
   
-    if (roles) {
-      const foundRole = await Role.find({ name: { $in: roles } });
-      newUser.roles = foundRole.map((role) => role._id);
-    } else {
-      const role = await Role.find({ name: "user" });
-      newUser.roles = [role._id];
-    }
-    
+    const role = await Role.find({ name: "user" });
+    newUser.roles = role[0]._id;
+
     const savedUser = await newUser.save();
   
     const token = jwt.sign({ id: savedUser._id }, process.env.SECRET, {
