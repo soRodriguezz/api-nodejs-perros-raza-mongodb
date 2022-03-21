@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 
 exports.verifyToken = async (req, res, next) => {
-    const token = req.headers["x-access-token"]; // headers de la peticion
+    const token = req.headers["authorization"]; // headers de la peticion
     try {
         if (!token) return res.status(403).json({error: "No token provided"});
 
