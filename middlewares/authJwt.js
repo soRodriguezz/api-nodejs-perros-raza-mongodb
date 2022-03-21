@@ -4,15 +4,15 @@ const jwt = require('jsonwebtoken');
 
 
 exports.verifyToken = async (req, res, next) => {
-    const token = req.headers["authorization"]; // headers de la peticion
+    const token = req.headers["authorization"];
     try {
         if (!token) return res.status(403).json({error: "No token provided"});
 
-        const decoded = jwt.verify(token, process.env.SECRET); // verifica el token
+        const decoded = jwt.verify(token, process.env.SECRET);
 
-        req.userId = decoded.id; // guarda el id del usuario en el request
+        req.userId = decoded.id;
 
-        const user = await User.findById(req.userId, { password: 0 }); // busca el usuario en la base de datos
+        const user = await User.findById(req.userId, { password: 0 });
         if(!user) return res.status(404).json({error: "User not found"});
 
         next(); // continua con la siguiente funcion
