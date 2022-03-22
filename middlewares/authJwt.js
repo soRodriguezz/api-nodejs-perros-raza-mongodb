@@ -2,7 +2,6 @@ const Role = require("../models/Role");
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-
 exports.verifyToken = async (req, res, next) => {
     const token = req.headers["authorization"];
     try {
@@ -15,7 +14,7 @@ exports.verifyToken = async (req, res, next) => {
         const user = await User.findById(req.userId, { password: 0 });
         if(!user) return res.status(404).json({error: "User not found"});
 
-        next(); // continua con la siguiente funcion
+        next();
     } catch (err) {
         return res.status(500).json({err});
     }
