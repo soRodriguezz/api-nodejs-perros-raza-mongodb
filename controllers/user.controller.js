@@ -1,9 +1,12 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
 
+const slugify = require("slugify");
+
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password, roles } = req.body;
+    const slug = slugify(req.body.username);
 
     const existUsername = await User.findOne({ username });
     const existEmail = await User.findOne({ email });
@@ -16,6 +19,7 @@ exports.createUser = async (req, res) => {
 
     const newUser = new User({
       username,
+      slug,
       email,
       password,
       roles,
@@ -27,6 +31,8 @@ exports.createUser = async (req, res) => {
     if (newUser.roles.length === 0) {
       newUser.roles = await Role.find({ name: "user" });
     }
+
+    
 
     await newUser.save();
     res.status(200).json({
