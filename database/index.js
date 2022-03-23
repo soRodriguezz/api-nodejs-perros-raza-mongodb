@@ -9,9 +9,9 @@ const connectDb = async () => {
             useCreateIndex: true
         });
 
-        console.log('MongoDB Connected...');
+        console.log('Conectado a MondoDB');
     }catch (error) {
-        console.log("DB CONNECTION ERROR: ", error);
+        console.log("Error de conexión: ", error);
         process.exit(1);
     }
 };

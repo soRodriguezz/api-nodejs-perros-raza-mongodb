@@ -14,7 +14,7 @@ exports.createUser = async (req, res) => {
     if (existEmail || existUsername) {
       return res
         .status(400)
-        .json({ message: "Username or email already exists" });
+        .json({ message: "Usuario o correo ya existen" });
     }
 
     const newUser = new User({
@@ -32,11 +32,9 @@ exports.createUser = async (req, res) => {
       newUser.roles = await Role.find({ name: "user" });
     }
 
-    
-
     await newUser.save();
     res.status(200).json({
-      message: "User created",
+      message: "Usuario creado correctamente",
       data: {
         username,
         email,

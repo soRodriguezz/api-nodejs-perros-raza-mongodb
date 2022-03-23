@@ -10,19 +10,19 @@ exports.createRole = async (req, res) => {
     const locateRole = await Role.findOne({ role });
 
     if (typeof name !== "string") {
-      return res.status(400).json({ message: "Invalid data" });
+      return res.status(400).json({ message: "Datos invalidos" });
     } else {
       if (locateName || locateRole) {
         return res
           .status(400)
-          .json({ message: "Role or NameRole is already taken" });
+          .json({ message: "El rol o nombre ya están ocupados" });
       } else {
         const newRole = await new Role({ name, role, slug }).save();
         return res.status(200).json(newRole);
       }
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 };
 
@@ -31,7 +31,7 @@ exports.listRoles = async (req, res) => {
     const roles = await Role.find({ status: "active" });
     return res.status(200).json(roles);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 };
 
@@ -41,7 +41,7 @@ exports.searchRole = async (req, res) => {
     status: "active",
   }).exec();
 
-  if (!role) return res.status(404).json({ message: "Role not found" });
+  if (!role) return res.status(404).json({ message: "Rol no encontrado" });
 
   return res.status(200).json(role);
 };
@@ -57,11 +57,11 @@ exports.removeSoftRole = async (req, res) => {
     );
 
     if (!deletedRole) {
-      return res.status(404).json({ message: "Role not found" });
+      return res.status(404).json({ message: "Rol no encontrado" });
     } else {
       return res.status(200).json(deletedRole);
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 };

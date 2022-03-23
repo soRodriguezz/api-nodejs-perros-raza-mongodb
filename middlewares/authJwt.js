@@ -5,14 +5,14 @@ const jwt = require('jsonwebtoken');
 exports.verifyToken = async (req, res, next) => {
     const token = req.headers["authorization"];
     try {
-        if (!token) return res.status(403).json({error: "No token provided"});
+        if (!token) return res.status(403).json({error: "No se proporcionó token"});
 
         const decoded = jwt.verify(token, process.env.SECRET);
 
         req.userId = decoded.id;
 
         const user = await User.findById(req.userId, { password: 0 });
-        if(!user) return res.status(404).json({error: "User not found"});
+        if(!user) return res.status(404).json({error: "Usuario no encontrado"});
 
         next();
     } catch (err) {
@@ -30,7 +30,7 @@ exports.isAdmin = async (req, res, next) => {
             return;
         }
     }
-    return res.status(403).json({error: "You are not a admin"});
+    return res.status(403).json({error: "No tienes permisos de administrador"});
 };
 
 exports.isModerator = async (req, res, next) => {
@@ -43,5 +43,5 @@ exports.isModerator = async (req, res, next) => {
             return;
         }
     }
-    return res.status(403).json({error: "You are not a moderator"});
+    return res.status(403).json({error: "No tienes permisos de moderador"});
 };
