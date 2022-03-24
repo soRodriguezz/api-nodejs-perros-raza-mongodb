@@ -52,7 +52,7 @@ exports.removeSoftRole = async (req, res) => {
 
     const deletedRole = await Role.findOneAndUpdate(
       { slug },
-      { status: "active" },
+      { status: "inactive" },
       { new: true }
     );
 
