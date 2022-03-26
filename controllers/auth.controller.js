@@ -16,7 +16,7 @@ exports.signin = async (req, res) => {
 
   if(!matchPassword) return res.status(401).json({token: null, message: "Contraseña o correo incorrectos"});
 
-  const token = jwt.sign({id: userFound._id}, process.env.SECRET, {
+  const token = jwt.sign({id: userFound._id, roles: userFound.roles}, process.env.SECRET, {
     expiresIn: 900,
   });
 
@@ -48,3 +48,18 @@ exports.signup = async (req, res) => {
   res.status(200).json({ token });
 };
 
+exports.decodeToken = async (req, res, next) => {
+  try{
+    const token = req.headers["authorization"];
+
+    const decoded = jwt.verify(token, process.env.SECRET, {complete: true});
+
+    let listRoles = [];
+
+    decoded.payload.roles.map((resp) => listRoles.push(resp.name))
+    
+    return res.status(200).json({roles: listRoles, token});
+  }catch(err){
+    return res.status(500).json({err});
+  }
+};
