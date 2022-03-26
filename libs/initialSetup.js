@@ -1,5 +1,5 @@
-const Role = require ("../models/Role");
-const slugify = require("slugify");
+const Role = require("../models/Role");
+const User = require("../models/User");
 
 exports.createRoles = async () => {
   try {
@@ -15,6 +15,26 @@ exports.createRoles = async () => {
 
     console.log(values);
   } catch (error) {
-      console.error(error);
+    console.error(error);
+  }
+};
+
+exports.createUserAdmin = async () => {
+  try {
+    const count = await User.estimatedDocumentCount();
+
+    if (count > 0) return;
+
+    const values = new User({
+      username: "sorz",
+      email: "sorz@gmail.com",
+      password: "qwerty"
+    });
+
+    values.roles = await Role.find({ name: "admin" });
+
+    await values.save();
+  } catch (error) {
+    console.error(error);
   }
 };
