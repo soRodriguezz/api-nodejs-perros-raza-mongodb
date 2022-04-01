@@ -51,14 +51,25 @@ exports.signup = async (req, res) => {
 exports.decodeToken = async (req, res, next) => {
   try{
     const token = req.headers["authorization"];
+    const profiles = ["user", "admin", "moderator"];
 
     const decoded = jwt.verify(token, process.env.SECRET, {complete: true});
 
     let listRoles = [];
 
     decoded.payload.roles.map((resp) => listRoles.push(resp.name))
+
+
+    let tienePermiso = listRoles.map(rol => {
+      return profiles.includes(rol)
+    });
+
+    if(tienePermiso.includes(true)) {
+      return res.status(200).json({permitido: true});
+    } else {
+      return res.status(401).json({message: "No tienes permisos"});
+    }
     
-    return res.status(200).json({roles: listRoles, token});
   }catch(err){
     return res.status(500).json({err});
   }
