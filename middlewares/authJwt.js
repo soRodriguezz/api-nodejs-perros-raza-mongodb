@@ -22,14 +22,15 @@ exports.verifyToken = async (req, res, next) => {
 
 exports.isAdmin = async (req, res, next) => {
     const user = await User.findById(req.userId);
-    const roles = await Role.find({_id: {$in: user.roles}});
+    const roles = await Role.find({_id: {$in: user.roles}})
 
-    for(let i = 0; i < roles.length; i++) {
-        if(roles[i].name === "admin") {
+    for (const rol of roles) {
+        if(rol.name === "admin") {
             next();
             return;
         }
     }
+
     return res.status(403).json({error: "No tienes permisos de administrador"});
 };
 
@@ -37,11 +38,12 @@ exports.isModerator = async (req, res, next) => {
     const user = await User.findById(req.userId);
     const roles = await Role.find({_id: {$in: user.roles}});
 
-    for(let i = 0; i < roles.length; i++) {
-        if(roles[i].name === "moderator") {
+    for (const rol of roles) {
+        if(rol.name === "moderator") {
             next();
             return;
         }
     }
+    
     return res.status(403).json({error: "No tienes permisos de moderador"});
 };
