@@ -26,7 +26,7 @@ exports.createRole = async (req, res) => {
   }
 };
 
-exports.listRoles = async (req, res) => {
+exports.listRoles = async (_req, res) => {
   try {
     const roles = await Role.find({ status: "active" });
     return res.status(200).json(roles);

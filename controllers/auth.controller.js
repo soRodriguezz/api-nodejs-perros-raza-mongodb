@@ -48,7 +48,7 @@ exports.signup = async (req, res) => {
   res.status(200).json({ token });
 };
 
-exports.decodeToken = async (req, res, next) => {
+exports.decodeToken = async (req, res, _next) => {
   try{
     const token = req.headers["authorization"];
 
